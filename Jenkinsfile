@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-id')
-    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -12,15 +9,19 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def app = docker.build("mabdullahk3/jenkins-pipeline-image:${env.BUILD_ID}")
+                    def app = docker.build("mabdullah12/jenkins-pipeline-image:${env.BUILD_ID}")
                 }
             }
         }
-        stage('Login to Docker Hub') {
+        stage('Login to Docker Hub and Push Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                        def app = docker.build("mabdullahk3/jenkins-pipeline-image:${env.BUILD_ID}")
+                    // Use the stored credentials in Jenkins
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub_id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
+                        
+                        // Build and Push Docker Image
+                        def app = docker.build("mabdullah12/jenkins-pipeline-image:${env.BUILD_ID}")
                         app.push("${env.BUILD_ID}")
                         app.push("latest")
                     }
