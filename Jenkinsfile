@@ -16,6 +16,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    // Build the Docker image
                     docker.build("${env.IMAGE_NAME}:latest")
                 }
             }
@@ -24,7 +25,8 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'DOCKERHUB_CREDENTIALS') {
+                    // Log into Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS) {
                         echo 'Logged into Docker Hub'
                     }
                 }
@@ -33,8 +35,8 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                // Push the Docker image to Docker Hub
                 script {
+                    // Push the Docker image to Docker Hub
                     docker.image("${env.IMAGE_NAME}:latest").push('latest')
                 }
             }
@@ -43,7 +45,7 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            cleanWs() // Clean workspace after the build
         }
     }
 }
