@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-id') // Jenkins credentials ID for DockerHub
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-id')
     }
     stages {
         stage('Clone Repository') {
@@ -12,7 +12,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def app = docker.build("mabdullahk3/my-image:${env.BUILD_ID}")
+                    def app = docker.build("mabdullahk3/Jenkins-pipeline-image:${env.BUILD_ID}")
                 }
             }
         }
