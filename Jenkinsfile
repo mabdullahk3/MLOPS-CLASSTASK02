@@ -12,7 +12,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def app = docker.build("mabdullahk3/Jenkins-pipeline-image:${env.BUILD_ID}")
+                    def app = docker.build("mabdullahk3/jenkins-pipeline-image:${env.BUILD_ID}")
                 }
             }
         }
