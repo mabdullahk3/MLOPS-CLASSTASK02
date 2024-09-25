@@ -7,7 +7,6 @@ pipeline {
     }
 
     stages {
-        stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: 'https://github.com/mabdullahk3/MLOPS-CLASSTASK02.git'
